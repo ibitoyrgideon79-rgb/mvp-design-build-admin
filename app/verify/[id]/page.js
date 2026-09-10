@@ -1,4 +1,5 @@
 import { getStaff } from "../../../lib/staffStore";
+import StaffAvatar from "../../../components/StaffAvatar";
 
 const CONTACT_EMAIL = process.env.COMPANY_CONTACT_EMAIL;
 const CONTACT_ADDRESS = process.env.COMPANY_CONTACT_ADDRESS;
@@ -59,14 +60,12 @@ export default async function VerifyStaffPage({ params }) {
         Verified Staff
       </div>
 
-      {staff.photoUrl ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={staff.photoUrl} alt="" className="mx-auto mt-5 h-24 w-24 rounded-full object-cover" />
-      ) : (
-        <div className="mx-auto mt-5 flex h-24 w-24 items-center justify-center rounded-full bg-neutral-100 text-2xl font-semibold text-neutral-500 dark:bg-neutral-800">
-          {staff.fullName.split(" ").filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase()).join("")}
-        </div>
-      )}
+      <StaffAvatar
+        photoUrl={staff.photoUrl}
+        fullName={staff.fullName}
+        className="mx-auto mt-5 h-24 w-24 rounded-full"
+        textClassName="text-2xl"
+      />
 
       <p className="mt-4 text-xl font-semibold">{staff.fullName}</p>
       <p className="text-sm text-neutral-500">{staff.role}</p>

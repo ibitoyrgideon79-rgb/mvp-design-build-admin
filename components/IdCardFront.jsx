@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 // Plain inline styles (not Tailwind color utilities) on purpose: this card
 // gets rasterized by html-to-image for the Download button, and the app's
 // global stylesheet (Tailwind v4, which compiles colors to oklch()/lab())
@@ -14,6 +18,8 @@ function initials(name) {
 }
 
 export default function IdCardFront({ staff }) {
+  const [photoFailed, setPhotoFailed] = useState(false);
+
   return (
     <div
       style={{
@@ -44,10 +50,11 @@ export default function IdCardFront({ staff }) {
         </p>
       </div>
 
-      {staff.photoUrl ? (
+      {staff.photoUrl && !photoFailed ? (
         <img
           src={staff.photoUrl}
           alt=""
+          onError={() => setPhotoFailed(true)}
           style={{
             position: "absolute", top: 34, left: 20,
             width: 60, height: 60, borderRadius: "50%", objectFit: "cover",

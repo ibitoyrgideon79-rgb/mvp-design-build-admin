@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Browsers strip background colors/images when printing by default (an
+   ink-saving default) - without this, the ID card's blue gradient header
+   and every colored badge print as plain white. */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
