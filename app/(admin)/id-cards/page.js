@@ -1,11 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import IdCardFront from "../../../components/IdCardFront";
 import IdCardBack from "../../../components/IdCardBack";
 import { resizeImageToDataUrl } from "../../../lib/resizeImage";
 
 export default function IdCardsPage() {
+  return (
+    <Suspense>
+      <IdCardsContent />
+    </Suspense>
+  );
+}
+
+function IdCardsContent() {
+  const searchParams = useSearchParams();
   const [staff, setStaff] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState(null);
@@ -18,6 +28,15 @@ export default function IdCardsPage() {
   useEffect(() => {
     loadStaff();
   }, []);
+
+  // Deep-link from Manage Staff's "Edit staff details" (/id-cards?staff=<id>).
+  useEffect(() => {
+    const staffId = searchParams.get("staff");
+    if (!staffId || staff.length === 0) return;
+    const match = staff.find((s) => s.id === staffId);
+    if (match) selectStaff(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staff, searchParams]);
 
   async function loadStaff() {
     setLoading(true);
@@ -83,8 +102,8 @@ export default function IdCardsPage() {
   }
 
   return (
-    <div className="flex w-full flex-1">
-      <div className="flex w-full max-w-sm flex-col border-r border-neutral-200 px-6 py-12 dark:border-neutral-800 print:hidden">
+    <div className="flex w-full flex-1 flex-col md:flex-row">
+      <div className="flex w-full flex-col border-b border-neutral-200 px-6 py-8 md:max-w-sm md:border-b-0 md:border-r md:py-12 dark:border-neutral-800 print:hidden">
         <header>
           <h1 className="text-2xl font-semibold">ID Cards</h1>
           <p className="mt-1 text-sm text-neutral-500">Select a staff member to view, edit, print, or download their ID card.</p>
@@ -110,7 +129,7 @@ export default function IdCardsPage() {
         </ul>
       </div>
 
-      <div className="flex flex-1 flex-col px-6 py-12">
+      <div className="flex flex-1 flex-col px-6 py-8 md:py-12">
         {!form ? (
           <p className="text-sm text-neutral-500">Select a staff member on the left to see their details.</p>
         ) : (
@@ -130,8 +149,10 @@ export default function IdCardsPage() {
                   Back
                 </button>
               </div>
-              <div ref={cardRef}>
-                {side === "front" ? <IdCardFront staff={form} /> : <IdCardBack staff={form} />}
+              <div className="max-w-full overflow-x-auto">
+                <div ref={cardRef}>
+                  {side === "front" ? <IdCardFront staff={form} /> : <IdCardBack staff={form} />}
+                </div>
               </div>
               <div className="mt-4 flex gap-2">
                 <button
@@ -157,12 +178,17 @@ export default function IdCardsPage() {
             <form onSubmit={handleSave} className="grid max-w-xl grid-cols-1 gap-4 sm:grid-cols-2 print:hidden">
               <label className="flex flex-col gap-1 text-sm sm:col-span-2">
                 <span className="font-medium">Photo (for ID card)</span>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 py-1">
                   {form.photoUrl && (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={form.photoUrl} alt="" className="h-12 w-12 rounded-full object-cover" />
                   )}
-                  <input type="file" accept="image/*" onChange={handlePhoto} className="text-sm" />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhoto}
+                    className="w-full text-sm text-neutral-500 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-neutral-900 file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-white hover:file:bg-neutral-700 dark:file:bg-white dark:file:text-neutral-900"
+                  />
                 </div>
               </label>
 

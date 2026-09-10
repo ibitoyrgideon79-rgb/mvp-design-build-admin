@@ -3,7 +3,7 @@ import { isValidSessionToken, SESSION_COOKIE } from "./lib/auth";
 
 // Everything under here requires a session; /verify/* (QR code links) and
 // /login stay public on purpose.
-const PROTECTED_PREFIXES = ["/onboard", "/id-cards", "/api/staff"];
+const PROTECTED_PREFIXES = ["/onboard", "/id-cards", "/manage-staff", "/api/staff", "/api/activity"];
 
 export async function middleware(request) {
   const { pathname } = request.nextUrl;
@@ -26,5 +26,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/onboard/:path*", "/id-cards/:path*", "/api/staff/:path*"],
+  matcher: ["/onboard/:path*", "/id-cards/:path*", "/manage-staff/:path*", "/api/staff/:path*", "/api/activity/:path*"],
 };

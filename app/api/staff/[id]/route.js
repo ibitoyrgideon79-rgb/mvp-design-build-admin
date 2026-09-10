@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStaff, updateStaff } from "@/lib/staffStore";
+import { deleteStaff, getStaff, updateStaff } from "@/lib/staffStore";
 
 const REQUIRED_FIELDS = ["fullName", "email", "role", "department", "startDate", "employmentType"];
 
@@ -29,4 +29,15 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: "Staff member not found" }, { status: 404 });
   }
   return NextResponse.json({ staff: record });
+}
+
+export async function DELETE(request, { params }) {
+  const { id } = await params;
+  const performedBy = request.nextUrl.searchParams.get("performedBy") || undefined;
+
+  const deleted = await deleteStaff(id, performedBy);
+  if (!deleted) {
+    return NextResponse.json({ error: "Staff member not found" }, { status: 404 });
+  }
+  return NextResponse.json({ ok: true });
 }

@@ -76,7 +76,7 @@ export default function StaffOnboardPage() {
       <form onSubmit={handleSubmit} className="grid max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm sm:col-span-2">
           <span className="font-medium">Photo (for ID card)</span>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 py-1">
             {form.photoUrl && (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={form.photoUrl} alt="" className="h-12 w-12 rounded-full object-cover" />
@@ -86,7 +86,7 @@ export default function StaffOnboardPage() {
               type="file"
               accept="image/*"
               onChange={handlePhoto}
-              className="text-sm"
+              className="w-full text-sm text-neutral-500 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-neutral-900 file:px-4 file:py-2.5 file:text-sm file:font-medium file:text-white hover:file:bg-neutral-700 dark:file:bg-white dark:file:text-neutral-900"
             />
           </div>
         </label>
